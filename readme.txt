@@ -1,6 +1,7 @@
-youtube-dl-playlist(Behind Proxy)
+youtube-dl-playlist
 
-This is forked version of youtube-dl-playlist by Jordon Mears, and designed to use behind proxy. 	
+Author: Jordon Mears <jordoncm at gmail dot com>
+License: LGPL version 2 or greater <http://www.gnu.org/licenses/lgpl.html>
 
 Usage: youtube-dl-playlist PLAYLIST_ID [DESTINATION_PATH]
 
@@ -17,3 +18,10 @@ Depends on:
  - youtube-dl (avaliable at http://rg3.github.com/youtube-dl/ and in repos for 
    most Linux distros)
 
+To install:
+1. Download the file youtube-dl-playlist and place it in /usr/local/bin.
+2. Make sure it has execute permissions: 
+   chmod /usr/local/bin/youtube-dl-playlist
+3. Install youtube-dl by placing its downloaded file in /usr/local/bin as well. 
+   It must also have execute permissions.
+4. Enjoy.
