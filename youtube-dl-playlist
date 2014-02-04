@@ -8,6 +8,7 @@
 
 import sys
 import urllib
+import urllib2
 import httplib
 import json
 import os
@@ -22,12 +23,15 @@ class PlaylistDownloader:
     downloaded = 0
 
     def setTarget(self, target):
+	#print sys._getframe().f_code.co_name
         self.targetDir = os.path.realpath(target) + '/';
         return self.targetDir;
 
     def download(self, playlistId):
         print 'Getting playlist information ... '
-        data = self.fetchInfo(playlistId)
+	#print sys._getframe().f_code.co_name
+        
+	data = self.fetchInfo(playlistId)
         self.totalVideos = int(data['feed']['openSearch$totalResults']['$t'])
         print 'Total videos to download: ' + str(self.totalVideos)
 
@@ -35,11 +39,18 @@ class PlaylistDownloader:
         os.chdir(self.setTarget(playlistDir))
 
         self.downloaded = 1;
+	#if 1:
         while(self.downloaded <= self.totalVideos):
-            data = self.fetchInfo(playlistId, self.downloaded, 50)
+	    print self.downloaded
+	    if (self.downloaded + 50 > self.totalVideos):
+ 	           data = self.fetchInfo(playlistId, self.downloaded, self.totalVideos-self.downloaded);
+	    else:	   
+            	   data = self.fetchInfo(playlistId, self.downloaded, 50)
+	    #print data['feed']['entry']
             self.downloadEntires(data['feed']['entry'])
 
     def downloadEntires(self, entries):
+	#print sys._getframe().f_code.co_name
         for entry in entries:
             group = entry['media$group'];
             if self.downloadEntry(group['yt$videoid']['$t'], group['media$title']['$t']):
@@ -47,16 +58,17 @@ class PlaylistDownloader:
             print
 
     def downloadEntry(self, ytId, ytTitle):
-        print ytId + '(' + str(self.downloaded).zfill(3) + '):', ytTitle, '...'
+	#print sys._getframe().f_code.co_name
+        #print ytId + '(' + str(self.downloaded).zfill(3) + '):', ytTitle, '...'
 
         existing = glob.glob('*' + ytId + '.*');
         filtered = [x for x in existing if not x.endswith('part')]
         if filtered.__len__() > 0:
-            print 'alreary exists, skipping...'
+           # print 'alreary exists, skipping...'
             return True
 
         try:
-            os.system('youtube-dl -t --audio-format=best http://www.youtube.com/watch?v=' + ytId)
+            os.system('youtube-dl  -t --audio-format=best http://www.youtube.com/watch?v=' + ytId)
             return True
 
         except KeyboardInterrupt:
@@ -67,24 +79,26 @@ class PlaylistDownloader:
             return False
 
     def fetchInfo(self, playlistId, start = 1, limit = 0):
-        connection = httplib.HTTPConnection('gdata.youtube.com')
-        connection.request('GET', '/feeds/api/playlists/' + str(playlistId) + '/?' + urllib.urlencode({
-                'alt' : 'json',
-                'max-results' : limit,
-                'start-index' : start,
-                'v' : 2
-            }))
+	#print sys._getframe().f_code.co_name
+	url= "http://gdata.youtube.com/feeds/api/playlists/"+ str(playlistId) + '/?';
+	url=url+ urllib.urlencode({'alt' : 'json','max-results' :limit,'start-index' : start,'v' : 2});
+	try:
+		req=urllib2.Request(url,headers={'User-Agent' : "Magic Browser"});
+		response = urllib2.urlopen(req);
+	except urllib2.HTTPError, e:
+		print e.fp.read();
+	if response.getcode() != 200:
+		print 'Error: Not a valid/public playlist.'
+		sys.exit(1)
 
-        response = connection.getresponse()
-        if response.status != 200:
-            print 'Error: Not a valid/public playlist.'
-            sys.exit(1)
-
-        data = response.read()
-        data = json.loads(data)
-        return data
+	data = response.read()
+	response.close()
+	#print data
+	data = json.loads(data)
+	return data
 
     def createPath(self, path, title):
+	#print sys._getframe().f_code.co_name
         title = title.replace('/', '')
         number = ''
 
