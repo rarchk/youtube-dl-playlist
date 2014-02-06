@@ -1,10 +1,10 @@
 youtube-dl-playlist(with proxy support)
 =======================================
 
-Originally authored by Jordon Mears _<jordoncm at gmail dot com>_
-License: LGPL version 2 or greater <http://www.gnu.org/licenses/lgpl.html>
+Originally authored by Jordon Mears _<jordoncm at gmail dot com>_,
+I've updated script to work with proxies too. 
 
-Usage: youtube-dl-playlist PLAYLIST_ID [DESTINATION_PATH]
+Usage: youtube-dl-playlist PLAYLIST\_ID [DESTINATION_PATH]
 
 This utility allows you to download all the videos from a playlist on Youtube. 
 It creates a folder in the current directory (or in the specified path) named 
