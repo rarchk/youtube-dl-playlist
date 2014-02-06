@@ -1,6 +1,7 @@
-youtube-dl-playlist
+youtube-dl-playlist(with proxy support)
+=======================================
 
-Author: Jordon Mears <jordoncm at gmail dot com>
+Originally authored by Jordon Mears _<jordoncm at gmail dot com>_
 License: LGPL version 2 or greater <http://www.gnu.org/licenses/lgpl.html>
 
 Usage: youtube-dl-playlist PLAYLIST_ID [DESTINATION_PATH]
